@@ -35,7 +35,7 @@ const io=new Server(expressServer, {
 io.on('connection', socket=>{
     console.log(`User ${socket.id} connected`)
     //upon connection send msg only to user connected
-    socket.emit('message',buildMsg(ADMIN, "Welcome to Chat App!"))
+    socket.emit('message',buildMsg(ADMIN, "  Welcome      to Chat App!"))
 
     socket.on('enterRoom',({name, room})=>{
         //leave prev room
