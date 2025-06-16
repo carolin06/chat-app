@@ -47,15 +47,20 @@ socket.on("message",(data)=>{
     li.className='post'
     if(name==nameInput.value) li.className='post post--left'
     if(name!==nameInput.value && name!=='Admin') li.className='post post--right'
-    if(name!=='Admin')
+    if(name!=='Admin'){
         li.innerHTML= `<div class="post__header ${name===nameInput.value? 'post__header--user':'post__header--reply'}">
     <span class=post__header--name">${name}</span>
     <span class=post__header--time">${time}</span>
 
-    `
-
-    document.querySelector('ul').appendChild(li)
+    </div>
+    <div class="post__text">${text}</div>`
+    } else{
+        li.innerHTML=`<div class=post__text">${text}</div>`
+    }
+    document.querySelector('.chat-display').appendChild(li)
+    chatDisplay.scrollTop=chatDisplay.scrollHeight
 })
+
 
 
 
@@ -68,8 +73,45 @@ socket.on('activity', (name)=>{
     clearTimeout(activityTimer)
     activityTimer=setTimeout(()=>{
         activity.textContent=""
-    },1000)
+    },3000)
 })
+
+socket.on('userList', ({users})=>{
+    showUsers(users)
+})
+socket.on('roomList', ({rooms})=>{
+    showRooms(rooms)
+})
+
+function showUsers(users){
+    usersList.textContent=''
+    if(users){
+        usersList.innerHTML=`<em>Users in ${chatRoom.value}:</em>`
+        users.orEach((user,i) => {
+            usersList.textContent+= `${user.name}`
+            if(users.length >1 && i!==users.length-1){
+                usersList.textContent+=","
+            }
+            
+        });
+    }
+}
+
+function showRooms(users){
+    roomList.textContent=''
+    if(rooms){
+        roomList.innerHTML=`<em>Active Rooms:</em>`
+        rooms.orEach((room,i) => {
+            roomList.textContent+= `${room}`
+            if(rooms.length >1 && i!==rooms.length-1){
+                roomList.textContent+=","
+            }
+            
+        });
+    }
+}
+
+
 
 
 

@@ -2,7 +2,7 @@ import express from 'express'
 import {Server} from "socket.io"
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { disconnect } from 'process'
+
 
 const __filename=fileURLToPath(import.meta.url)
 const __dirname=path.dirname(__filename)
@@ -47,7 +47,7 @@ io.on('connection', socket=>{
         }
 
         const user=activateUser(socket.id,name,room)
-        })
+        
 
         if(prevRoom){
             io.to(prevRoom).emit('userList',{
@@ -72,7 +72,8 @@ io.on('connection', socket=>{
         //update rooms list for all
         io.emit('roomList',{
             rooms: getallActiveRooms()
-        })
+        });
+    });
 
      //when user disconnects- to all others
     socket.on('disconnect',()=>{
@@ -141,7 +142,7 @@ function userLeavesApp(id){
 
 
 function getUser(id) {
-    return UsersState.user.find(user=>user.id===id)
+    return UsersState.users.find(user=>user.id===id)
 }
 
 function getUsersInRoom(room){
@@ -149,5 +150,5 @@ function getUsersInRoom(room){
 }
 
 function getallActiveRooms(){
-    return Array.from (new set(UsersState.users.map(user=>user.room)))
+    return Array.from (new Set(UsersState.users.map(user=>user.room)))
 }
